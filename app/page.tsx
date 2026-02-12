@@ -37,7 +37,7 @@ export default function Home() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?flow=signup`,
         },
       });
 
@@ -52,21 +52,12 @@ export default function Home() {
 
   const handleLogIn = async () => {
     setLoginLoading(true);
-    const confirmed = window.confirm(
-      'ℹ️ This is a first-time user app.\n\nIf you don\'t have an account yet, please create one first by clicking "Sign Up with Google".\n\nDo you already have an account?'
-    );
-
-    if (!confirmed) {
-      setLoginLoading(false);
-      return;
-    }
-
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?flow=login`,
         },
       });
 
