@@ -89,16 +89,15 @@ export default function BookmarkList({
                 <button
                   onClick={() => handleDelete(bookmark.id)}
                   disabled={deletingId === bookmark.id}
-                  className="ml-4 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2"
+                  className="ml-4 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-semibold px-3 py-1 text-sm rounded transition"
                   title="Delete bookmark"
                 >
                   {deletingId === bookmark.id ? (
                     <>
-                      <span className="inline-block animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                      Deleting...
+                      <span className="inline-block animate-spin w-3 h-3 border-2 border-white border-t-transparent rounded-full"></span>
                     </>
                   ) : (
-                    '🗑️ Delete'
+                    'Delete'
                   )}
                 </button>
               </div>
