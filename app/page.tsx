@@ -90,42 +90,48 @@ export default function Home() {
           <p className="text-slate-400 mt-2">Save and organize your favorite links</p>
         </div>
 
-        <div className="space-y-3">
-          <button
-            onClick={handleSignUp}
-            disabled={signupLoading}
-            className="w-full bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-          >
-            {signupLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                Signing up...
-              </>
-            ) : (
-              <>
-                <span>✨</span>
-                Sign Up with Google
-              </>
-            )}
-          </button>
+        <div className="space-y-4">
+          <div>
+            <button
+              onClick={handleSignUp}
+              disabled={signupLoading}
+              className="w-full bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+            >
+              {signupLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  Signing up...
+                </>
+              ) : (
+                <>
+                  <span>✨</span>
+                  Sign Up with Google
+                </>
+              )}
+            </button>
+            <p className="text-xs text-slate-500 mt-2 text-center">New user? Create your account here</p>
+          </div>
 
-          <button
-            onClick={handleLogIn}
-            disabled={loginLoading}
-            className="w-full bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-          >
-            {loginLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                Logging in...
-              </>
-            ) : (
-              <>
-                <span>🔐</span>
-                Log In with Google
-              </>
-            )}
-          </button>
+          <div>
+            <button
+              onClick={handleLogIn}
+              disabled={loginLoading}
+              className="w-full bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+            >
+              {loginLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  Logging in...
+                </>
+              ) : (
+                <>
+                  <span>🔐</span>
+                  Log In with Google
+                </>
+              )}
+            </button>
+            <p className="text-xs text-slate-500 mt-2 text-center">Already have an account? Log in here</p>
+          </div>
         </div>
 
         <p className="text-center text-white/60 text-sm mt-6">
