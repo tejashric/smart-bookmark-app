@@ -73,7 +73,7 @@ export default function BookmarkForm({ userId }: BookmarkFormProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter bookmark title"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-4 py-2 border border-gray-600 bg-gray-50 text-gray-900 placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
             disabled={loading}
           />
         </div>
@@ -87,7 +87,7 @@ export default function BookmarkForm({ userId }: BookmarkFormProps) {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-4 py-2 border border-gray-600 bg-gray-50 text-gray-900 placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
             disabled={loading}
           />
         </div>
