@@ -40,7 +40,8 @@ export default function CallbackContent() {
               .from('user_profiles')
               .insert([{ id: userId }]);
 
-            if (insertError) {
+            if (insertError && insertError.code !== 'PGRST116') {
+              // PGRST116 is a duplicate key error, which is fine if profile already exists
               console.error('Error creating user profile:', insertError);
               setError('Failed to create account. Please try again.');
               setTimeout(() => router.push('/'), 2000);

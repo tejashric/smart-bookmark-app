@@ -18,7 +18,8 @@ CREATE POLICY "Users can view their own profile" ON user_profiles
   FOR SELECT
   USING (auth.uid() = id);
 
--- Create RLS policy: Only the auth system can insert profiles (via trigger)
-CREATE POLICY "System can insert user profiles" ON user_profiles
+-- Create RLS policy: Users can insert their own profile
+CREATE POLICY "Users can insert their own profile" ON user_profiles
   FOR INSERT
-  WITH CHECK (true);
+  WITH CHECK (auth.uid() = id);
+
