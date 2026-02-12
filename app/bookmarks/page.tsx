@@ -119,10 +119,15 @@ export default function BookmarksPage() {
     }
 
     const supabase = createClient();
-    const { error } = await supabase
+    console.log('Attempting to delete bookmark:', id);
+    
+    const { error, data } = await supabase
       .from('bookmarks')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .select();
+
+    console.log('Delete response:', { error, data });
 
     if (error) {
       console.error('Error deleting bookmark:', error);
@@ -130,7 +135,8 @@ export default function BookmarksPage() {
       return;
     }
 
-    // The real-time listener will update the UI automatically
+    // Manually remove from state
+    setBookmarks((prev) => prev.filter((b) => b.id !== id));
   };
 
   if (loading) {
