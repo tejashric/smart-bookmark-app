@@ -113,17 +113,24 @@ export default function BookmarksPage() {
   };
 
   const handleDeleteBookmark = async (id: string) => {
+    if (!user?.id) {
+      alert('User not authenticated');
+      return;
+    }
+
     const supabase = createClient();
     const { error } = await supabase
       .from('bookmarks')
       .delete()
-      .eq('id', id)
-      .eq('user_id', user?.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting bookmark:', error);
-      alert('Failed to delete bookmark');
+      alert(`Failed to delete bookmark: ${error.message}`);
+      return;
     }
+
+    // The real-time listener will update the UI automatically
   };
 
   if (loading) {
