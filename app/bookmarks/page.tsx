@@ -114,7 +114,11 @@ export default function BookmarksPage() {
 
   const handleDeleteBookmark = async (id: string) => {
     const supabase = createClient();
-    const { error } = await supabase.from('bookmarks').delete().eq('id', id);
+    const { error } = await supabase
+      .from('bookmarks')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user?.id);
 
     if (error) {
       console.error('Error deleting bookmark:', error);
