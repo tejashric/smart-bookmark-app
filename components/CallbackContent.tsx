@@ -52,10 +52,12 @@ export default function CallbackContent() {
         } else if (flow === 'login') {
           // Login flow: only proceed if profile exists
           if (!profile) {
+            // Sign out the user if they don't have a profile
+            await supabase.auth.signOut();
             setError(
               'Account not found. Please sign up first using the Sign Up button.'
             );
-            setTimeout(() => router.push('/'), 3000);
+            setTimeout(() => router.push('/'), 2000);
             return;
           }
           // Redirect to bookmarks
