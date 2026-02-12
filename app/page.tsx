@@ -72,8 +72,8 @@ export default function Home() {
 
   if (checkingAuth) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
       </div>
     );
   }
@@ -83,18 +83,18 @@ export default function Home() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-md border border-white/20">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-black">Smart Bookmarks</h1>
-          <p className="text-black mt-2">Save and organize your favorite links</p>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Smart Bookmarks</h1>
+          <p className="text-white/70 mt-2">Save and organize your favorite links</p>
         </div>
 
         <div className="space-y-3">
           <button
             onClick={handleSignUp}
             disabled={signupLoading}
-            className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-blue-400 disabled:to-blue-500 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
           >
             {signupLoading ? (
               <>
@@ -112,7 +112,7 @@ export default function Home() {
           <button
             onClick={handleLogIn}
             disabled={loginLoading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-purple-400 disabled:to-pink-400 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
           >
             {loginLoading ? (
               <>
@@ -128,7 +128,7 @@ export default function Home() {
           </button>
         </div>
 
-        <p className="text-center text-black text-sm mt-6">
+        <p className="text-center text-white/60 text-sm mt-6">
           We only use your Google account for secure authentication.
         </p>
       </div>

@@ -151,18 +151,18 @@ export default function BookmarksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100">
-      <nav className="bg-white shadow-md">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <nav className="bg-white/10 backdrop-blur-md shadow-lg border-b border-white/10">
+        <div className="max-w-6xl mx-auto px-4 py-5 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-black">Smart Bookmarks</h1>
-            <p className="text-sm text-black">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Smart Bookmarks</h1>
+            <p className="text-sm text-gray-300 mt-1">
               {user?.email}
             </p>
           </div>
           <button
             onClick={handleSignOut}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 shadow-lg hover:shadow-xl"
           >
             Sign Out
           </button>
