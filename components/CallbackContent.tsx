@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/lib/client';
 
 export default function CallbackContent() {
@@ -40,9 +41,9 @@ export default function CallbackContent() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-500 mb-4">Error</h1>
           <p className="text-gray-700 mb-4">{error}</p>
-          <a href="/" className="text-blue-500 hover:underline">
+          <Link href="/" className="text-blue-500 hover:underline">
             Back to home
-          </a>
+          </Link>
         </div>
       </div>
     );

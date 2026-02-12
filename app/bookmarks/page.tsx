@@ -21,8 +21,41 @@ export default function BookmarksPage() {
   const router = useRouter();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
+
+  // Define functions before useEffect so they can be called
+  const fetchBookmarks = async (userId: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('bookmarks')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching bookmarks:', error);
+      return;
+    }
+
+    setBookmarks(data || []);
+  };
+
+  const handleRealtimeUpdate = (payload: any) => {
+    // Supabase real-time payload type is complex and dynamic, 'any' is acceptable here
+    if (payload.eventType === 'INSERT' && payload.new) {
+      const newBookmark = payload.new as Bookmark;
+      setBookmarks((prev) => [newBookmark, ...prev]);
+    } else if (payload.eventType === 'DELETE' && payload.old) {
+      const oldBookmark = payload.old as Bookmark;
+      setBookmarks((prev) => prev.filter((b) => b.id !== oldBookmark.id));
+    } else if (payload.eventType === 'UPDATE' && payload.new) {
+      const updatedBookmark = payload.new as Bookmark;
+      setBookmarks((prev) =>
+        prev.map((b) => (b.id === updatedBookmark.id ? updatedBookmark : b))
+      );
+    }
+  };
 
   useEffect(() => {
     const initializeBookmarks = async () => {
@@ -73,34 +106,6 @@ export default function BookmarksPage() {
     };
   }, [router]);
 
-  const fetchBookmarks = async (userId: string) => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from('bookmarks')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching bookmarks:', error);
-      return;
-    }
-
-    setBookmarks(data || []);
-  };
-
-  const handleRealtimeUpdate = (payload: any) => {
-    if (payload.eventType === 'INSERT') {
-      setBookmarks((prev) => [payload.new, ...prev]);
-    } else if (payload.eventType === 'DELETE') {
-      setBookmarks((prev) => prev.filter((b) => b.id !== payload.old.id));
-    } else if (payload.eventType === 'UPDATE') {
-      setBookmarks((prev) =>
-        prev.map((b) => (b.id === payload.new.id ? payload.new : b))
-      );
-    }
-  };
-
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -129,7 +134,7 @@ export default function BookmarksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100">
       <nav className="bg-white shadow-md">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <div>
