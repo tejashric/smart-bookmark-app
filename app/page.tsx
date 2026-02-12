@@ -8,7 +8,8 @@ export const dynamic = 'force-dynamic';
 
 export default function Home() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
@@ -29,8 +30,8 @@ export default function Home() {
     checkAuth();
   }, [router]);
 
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
+  const handleSignUp = async () => {
+    setSignupLoading(true);
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.signInWithOAuth({
@@ -44,8 +45,28 @@ export default function Home() {
         throw error;
       }
     } catch (error) {
-      console.error('Sign in error:', error);
-      setLoading(false);
+      console.error('Sign up error:', error);
+      setSignupLoading(false);
+    }
+  };
+
+  const handleLogIn = async () => {
+    setLoginLoading(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Log in error:', error);
+      setLoginLoading(false);
     }
   };
 
@@ -71,11 +92,11 @@ export default function Home() {
 
         <div className="space-y-3">
           <button
-            onClick={handleGoogleSignIn}
-            disabled={loading}
+            onClick={handleSignUp}
+            disabled={signupLoading}
             className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
           >
-            {loading ? (
+            {signupLoading ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                 Signing up...
@@ -89,11 +110,11 @@ export default function Home() {
           </button>
 
           <button
-            onClick={handleGoogleSignIn}
-            disabled={loading}
+            onClick={handleLogIn}
+            disabled={loginLoading}
             className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
           >
-            {loading ? (
+            {loginLoading ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                 Logging in...
