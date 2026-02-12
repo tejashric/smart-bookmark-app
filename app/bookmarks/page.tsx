@@ -138,8 +138,8 @@ export default function BookmarksPage() {
       <nav className="bg-white shadow-md">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Smart Bookmarks</h1>
-            <p className="text-sm text-gray-600">
+            <h1 className="text-2xl font-bold text-black">Smart Bookmarks</h1>
+            <p className="text-sm text-black">
               {user?.email}
             </p>
           </div>

@@ -61,11 +61,11 @@ export default function BookmarkForm({ userId }: BookmarkFormProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Add Bookmark</h2>
+      <h2 className="text-2xl font-bold text-black mb-6">Add Bookmark</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-black mb-2">
             Title
           </label>
           <input
@@ -79,7 +79,7 @@ export default function BookmarkForm({ userId }: BookmarkFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-black mb-2">
             URL
           </label>
           <input

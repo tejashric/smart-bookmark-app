@@ -65,29 +65,49 @@ export default function Home() {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900">Smart Bookmarks</h1>
-          <p className="text-gray-600 mt-2">Save and organize your favorite links</p>
+          <h1 className="text-4xl font-bold text-black">Smart Bookmarks</h1>
+          <p className="text-black mt-2">Save and organize your favorite links</p>
         </div>
 
-        <button
-          onClick={handleGoogleSignIn}
-          disabled={loading}
-          className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
-        >
-          {loading ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              Signing in...
-            </>
-          ) : (
-            <>
-              <span>🔐</span>
-              Sign in with Google
-            </>
-          )}
-        </button>
+        <div className="space-y-3">
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                Signing up...
+              </>
+            ) : (
+              <>
+                <span>✨</span>
+                Sign Up with Google
+              </>
+            )}
+          </button>
 
-        <p className="text-center text-gray-600 text-sm mt-6">
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                Logging in...
+              </>
+            ) : (
+              <>
+                <span>🔐</span>
+                Log In with Google
+              </>
+            )}
+          </button>
+        </div>
+
+        <p className="text-center text-black text-sm mt-6">
           We only use your Google account for secure authentication.
         </p>
       </div>

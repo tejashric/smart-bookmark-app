@@ -51,13 +51,13 @@ export default function BookmarkList({
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <h2 className="text-2xl font-bold text-black mb-6">
         Your Bookmarks ({bookmarks.length})
       </h2>
 
       {bookmarks.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">
+          <p className="text-black text-lg">
             No bookmarks yet. Add one to get started!
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function BookmarkList({
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 truncate">
+                  <h3 className="font-semibold text-black truncate">
                     {bookmark.title}
                   </h3>
                   <a
@@ -82,7 +82,7 @@ export default function BookmarkList({
                   >
                     {getDomain(bookmark.url)}
                   </a>
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-black mt-2">
                     {formatDate(bookmark.created_at)}
                   </p>
                 </div>
