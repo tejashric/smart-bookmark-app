@@ -129,13 +129,13 @@ export default function BookmarksPage() {
     const supabase = createClient();
     console.log('Attempting to delete bookmark:', id);
     
-    const { error, data } = await supabase
+    const { error } = await supabase
       .from('bookmarks')
       .delete()
       .eq('id', id)
-      .select();
+      .eq('user_id', user.id);
 
-    console.log('Delete response:', { error, data });
+    console.log('Delete response:', { error });
 
     if (error) {
       console.error('Error deleting bookmark:', error);
@@ -143,8 +143,7 @@ export default function BookmarksPage() {
       return;
     }
 
-    // Manually remove from state
-    setBookmarks((prev) => prev.filter((b) => b.id !== id));
+    console.log('Bookmark deleted successfully, real-time subscription will update the state');
   };
 
   if (loading) {
