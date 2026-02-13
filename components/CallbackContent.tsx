@@ -14,80 +14,86 @@ export default function CallbackContent() {
       try {
         const supabase = createClient();
         
-        // Retry logic to wait for session to be established
-        let session = null;
-        let retries = 0;
-        const maxRetries = 5;
-        
-        while (!session && retries < maxRetries) {
-          const { data } = await supabase.auth.getSession();
-          session = data?.session;
+        // Use onAuthStateChange to wait for session to be established
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+          console.log('Auth state changed:', event, session?.user?.id);
           
-          if (!session) {
-            retries++;
-            console.log(`Session not ready, retry ${retries}/${maxRetries}`);
-            await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms before retrying
-          }
-        }
+          if (event === 'SIGNED_IN' && session) {
+            try {
+              const flow = searchParams.get('flow');
+              const userId = session.user.id;
 
-        if (!session) {
-          console.error('Session still not available after retries');
-          setError('Authentication failed. Please try again.');
-          setTimeout(() => router.push('/'), 2000);
-          return;
-        }
+              console.log('Processing flow:', flow, 'for user:', userId);
 
-        console.log('Session established:', session.user.id);
+              // Check if user profile exists
+              const { data: profile, error: profileError } = await supabase
+                .from('user_profiles')
+                .select('id')
+                .eq('id', userId)
+                .single();
 
-        const flow = searchParams.get('flow');
-        const userId = session.user.id;
+              console.log('Profile check result:', { profile, profileError });
 
-        // Check if user profile exists
-        const { data: profile, error: profileError } = await supabase
-          .from('user_profiles')
-          .select('id')
-          .eq('id', userId)
-          .single();
+              if (flow === 'signup') {
+                // Sign up flow: create profile if it doesn't exist
+                if (!profile) {
+                  const { error: insertError } = await supabase
+                    .from('user_profiles')
+                    .insert([{ id: userId }]);
 
-        console.log('Profile check result:', { profile, profileError });
-
-        if (flow === 'signup') {
-          // Sign up flow: create profile if it doesn't exist
-          if (!profile) {
-            const { error: insertError } = await supabase
-              .from('user_profiles')
-              .insert([{ id: userId }]);
-
-            if (insertError && insertError.code !== 'PGRST116') {
-              // PGRST116 is a duplicate key error, which is fine if profile already exists
-              console.error('Error creating user profile:', insertError);
-              setError('Failed to create account. Please try again.');
-              setTimeout(() => router.push('/'), 2000);
-              return;
+                  if (insertError && insertError.code !== 'PGRST116') {
+                    console.error('Error creating user profile:', insertError);
+                    setError('Failed to create account. Please try again.');
+                    setTimeout(() => {
+                      subscription?.unsubscribe();
+                      router.push('/');
+                    }, 2000);
+                    return;
+                  }
+                  console.log('Profile created successfully');
+                }
+                // Redirect to bookmarks
+                subscription?.unsubscribe();
+                router.push('/bookmarks');
+              } else if (flow === 'login') {
+                // Login flow: only proceed if profile exists
+                if (!profile) {
+                  // Sign out the user if they don't have a profile
+                  await supabase.auth.signOut();
+                  setError(
+                    'Account not found. Please sign up first using the Sign Up button.'
+                  );
+                  setTimeout(() => {
+                    subscription?.unsubscribe();
+                    router.push('/');
+                  }, 2000);
+                  return;
+                }
+                // Redirect to bookmarks
+                subscription?.unsubscribe();
+                router.push('/bookmarks');
+              } else {
+                // Default: redirect to bookmarks
+                subscription?.unsubscribe();
+                router.push('/bookmarks');
+              }
+            } catch (err) {
+              console.error('Callback processing error:', err);
+              setError('An error occurred. Redirecting...');
+              setTimeout(() => {
+                subscription?.unsubscribe();
+                router.push('/');
+              }, 2000);
             }
-            console.log('Profile created successfully');
           }
-          // Redirect to bookmarks
-          router.push('/bookmarks');
-        } else if (flow === 'login') {
-          // Login flow: only proceed if profile exists
-          if (!profile) {
-            // Sign out the user if they don't have a profile
-            await supabase.auth.signOut();
-            setError(
-              'Account not found. Please sign up first using the Sign Up button.'
-            );
-            setTimeout(() => router.push('/'), 2000);
-            return;
-          }
-          // Redirect to bookmarks
-          router.push('/bookmarks');
-        } else {
-          // Default: redirect to bookmarks
-          router.push('/bookmarks');
-        }
+        });
+
+        // Cleanup
+        return () => {
+          subscription?.unsubscribe();
+        };
       } catch (err) {
-        console.error('Callback error:', err);
+        console.error('Callback setup error:', err);
         setError('An error occurred. Redirecting...');
         setTimeout(() => router.push('/'), 2000);
       }
