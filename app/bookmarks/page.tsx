@@ -87,13 +87,38 @@ export default function BookmarksPage() {
         .on(
           'postgres_changes',
           {
-            event: '*',
+            event: 'DELETE',
+            schema: 'public',
+            table: 'bookmarks',
+          },
+          (payload) => {
+            console.log('🔔 DELETE event received:', payload);
+            handleRealtimeUpdate(payload);
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
             schema: 'public',
             table: 'bookmarks',
             filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
-            console.log('Subscription event received:', payload);
+            console.log('🔔 INSERT event received:', payload);
+            handleRealtimeUpdate(payload);
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'bookmarks',
+            filter: `user_id=eq.${session.user.id}`,
+          },
+          (payload) => {
+            console.log('🔔 UPDATE event received:', payload);
             handleRealtimeUpdate(payload);
           }
         )
