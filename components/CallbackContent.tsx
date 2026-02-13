@@ -13,15 +13,31 @@ export default function CallbackContent() {
     const handleCallback = async () => {
       try {
         const supabase = createClient();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+        
+        // Retry logic to wait for session to be established
+        let session = null;
+        let retries = 0;
+        const maxRetries = 5;
+        
+        while (!session && retries < maxRetries) {
+          const { data } = await supabase.auth.getSession();
+          session = data?.session;
+          
+          if (!session) {
+            retries++;
+            console.log(`Session not ready, retry ${retries}/${maxRetries}`);
+            await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms before retrying
+          }
+        }
 
         if (!session) {
+          console.error('Session still not available after retries');
           setError('Authentication failed. Please try again.');
           setTimeout(() => router.push('/'), 2000);
           return;
         }
+
+        console.log('Session established:', session.user.id);
 
         const flow = searchParams.get('flow');
         const userId = session.user.id;
@@ -32,6 +48,8 @@ export default function CallbackContent() {
           .select('id')
           .eq('id', userId)
           .single();
+
+        console.log('Profile check result:', { profile, profileError });
 
         if (flow === 'signup') {
           // Sign up flow: create profile if it doesn't exist
@@ -47,6 +65,7 @@ export default function CallbackContent() {
               setTimeout(() => router.push('/'), 2000);
               return;
             }
+            console.log('Profile created successfully');
           }
           // Redirect to bookmarks
           router.push('/bookmarks');
