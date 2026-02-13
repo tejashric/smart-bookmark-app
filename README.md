@@ -2,15 +2,6 @@
 
 A modern bookmark manager built with Next.js, Supabase, and Tailwind CSS. Save your favorite links securely and access them from anywhere with real-time synchronization across devices.
 
-## Features
-
-- **Google OAuth Authentication** - One-click sign-in using your Google account
-- **Bookmark Management** - Add, view, and delete bookmarks with ease
-- **Real-time Sync** - Bookmarks update instantly across all open tabs/devices without page refresh
-- **Private Bookmarks** - Each user can only see their own bookmarks
-- **Clean UI** - Modern, responsive design built with Tailwind CSS
-- **Mobile Friendly** - Works seamlessly on mobile, tablet, and desktop
-
 ## Tech Stack
 
 - **Frontend**: Next.js 14+ (App Router), React, TypeScript, Tailwind CSS
@@ -77,6 +68,15 @@ A modern bookmark manager built with Next.js, Supabase, and Tailwind CSS. Save y
 | Security | No signup validation | user_profiles table + flow params |
 
 All issues resolved ✅ - App production ready
+
+## Features
+
+- **Google OAuth Authentication** - One-click sign-in using your Google account
+- **Bookmark Management** - Add, view, and delete bookmarks with ease
+- **Real-time Sync** - Bookmarks update instantly across all open tabs/devices without page refresh
+- **Private Bookmarks** - Each user can only see their own bookmarks
+- **Clean UI** - Modern, responsive design built with Tailwind CSS
+- **Mobile Friendly** - Works seamlessly on mobile, tablet, and desktop
 
 ## Getting Started
 
