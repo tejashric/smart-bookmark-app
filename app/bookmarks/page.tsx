@@ -51,8 +51,11 @@ export default function BookmarksPage() {
       setBookmarks((prev) => [newBookmark, ...prev]);
     } else if (payload.eventType === 'DELETE' && payload.old) {
       const oldBookmark = payload.old as Bookmark;
-      console.log('Deleting bookmark:', oldBookmark.id);
-      setBookmarks((prev) => prev.filter((b) => b.id !== oldBookmark.id));
+      // Only process if it's our bookmark
+      if (oldBookmark.user_id === user?.id) {
+        console.log('Deleting bookmark:', oldBookmark.id);
+        setBookmarks((prev) => prev.filter((b) => b.id !== oldBookmark.id));
+      }
     } else if (payload.eventType === 'UPDATE' && payload.new) {
       const updatedBookmark = payload.new as Bookmark;
       console.log('Updating bookmark:', updatedBookmark);
@@ -169,18 +172,7 @@ export default function BookmarksPage() {
         return;
       }
 
-      console.log('✅ Bookmark deleted successfully');
-      
-      // Fallback: manually update state if real-time doesn't fire within 1 second
-      setTimeout(() => {
-        setBookmarks((prev) => {
-          const updated = prev.filter((b) => b.id !== id);
-          if (updated.length < prev.length) {
-            console.log('✅ Fallback: Manually removed bookmark from state');
-          }
-          return updated;
-        });
-      }, 1000);
+      console.log('✅ Bookmark deleted - real-time subscription will sync across all tabs');
     } catch (err) {
       console.error('❌ Unexpected error during delete:', err);
       alert('Unexpected error deleting bookmark');
