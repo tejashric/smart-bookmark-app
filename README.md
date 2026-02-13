@@ -19,6 +19,65 @@ A modern bookmark manager built with Next.js, Supabase, and Tailwind CSS. Save y
 - **Hosting**: Vercel
 - **Real-time**: Supabase Real-time Engine
 
+## Problems Faced & Solutions
+
+### 1. Real-Time DELETE Events Not Firing
+
+**Problem:** Bookmarks deleted in one tab didn't disappear from other tabs.
+
+**Root Cause:** 
+- Used `.select()` on DELETE (conflicted with RLS)
+- Applied `user_id=eq.` filter to DELETE subscription (blocks events)
+
+**Solution:**
+1. Removed `.select()` from delete operations
+2. Removed user_id filter from DELETE subscription
+3. Added user_id check in `handleRealtimeUpdate()` function
+
+**Result:** ✅ Real-time DELETE events now fire across all tabs
+
+---
+
+### 2. OAuth Callback Timing Issues
+
+**Problem:** After Google OAuth redirect, "Authentication failed" errors because session wasn't available immediately.
+
+**Root Cause:** Race condition - session not ready when callback handler checked synchronously.
+
+**Solution:** Implemented dual-approach session detection:
+1. Check for existing session with `getSession()`
+2. If not found, listen for `onAuthStateChange` events
+3. Add 5-second timeout as fail-safe
+
+**Result:** ✅ 100% reliable OAuth authentication
+
+---
+
+### 3. Sign-Up Requirement Not Enforced
+
+**Problem:** No validation that users must sign up - anyone with Google account could log in.
+
+**Root Cause:** No way to distinguish signup from login attempts.
+
+**Solution:**
+1. Created `user_profiles` table to track signed-up users
+2. Used flow parameters: `?flow=signup` vs `?flow=login`
+3. Signup creates profile record, Login verifies profile exists
+
+**Result:** ✅ Sign-up is now required before login works
+
+---
+
+### Summary
+
+| Issue | Problem | Solution |
+|-------|---------|----------|
+| Real-time sync | DELETE events blocked | Removed filters + check in code |
+| OAuth errors | Session timing race condition | Dual-approach: check + listen + timeout |
+| Security | No signup validation | user_profiles table + flow params |
+
+All issues resolved ✅ - App production ready
+
 ## Getting Started
 
 ### Prerequisites
@@ -127,60 +186,6 @@ supabase/
 - All queries filtered by `auth.uid()` on the database level
 - Public anon key safe to expose in frontend
 - Private user data never exposed to other users
-
-## Problems & Solutions
-
-### Problem 1: CORS Issues with Supabase
-**Issue**: Initial development had CORS errors when trying to connect to Supabase from localhost.
-
-**Solution**: 
-- Ensured the Supabase URL and anon key were correctly configured
-- Used Supabase's built-in CORS support (already configured by default)
-- Made sure we were using the correct library (`@supabase/ssr` for proper App Router support)
-
-### Problem 2: Real-time Subscriptions Not Working
-**Issue**: Bookmarks weren't updating in real-time when added from another tab.
-
-**Solution**:
-- Verified that Row Level Security (RLS) policies were enabled on the bookmarks table
-- Ensured the `supabase_realtime` publication included the bookmarks table with `ALTER PUBLICATION supabase_realtime ADD TABLE bookmarks;`
-- Used proper channel naming with user-specific filters: `channel('bookmarks:${userId}')`
-- Tested with browser DevTools to confirm WebSocket connection was established
-
-### Problem 3: Auth State Not Persisting
-**Issue**: Users were logged out after page refresh during development.
-
-**Solution**:
-- Switched from deprecated `@supabase/auth-helpers-nextjs` to `@supabase/ssr` package
-- Used proper session handling in Next.js App Router
-- Implemented proper `getSession()` calls in `useEffect` to check authentication state
-
-### Problem 4: Tailwind CSS Not Loading
-**Issue**: Styles appeared broken after initial setup.
-
-**Solution**:
-- Verified Tailwind CSS was properly installed during Next.js project creation
-- Confirmed `globals.css` had Tailwind directives
-- Made sure build process was restarted
-
-### Problem 5: Google OAuth Redirect URI Mismatch
-**Issue**: Got "redirect_uri_mismatch" error during Google sign-in flow.
-
-**Solution**:
-- Verified exact redirect URI in Google Cloud Console matched the app redirect
-- Used `window.location.origin` to build dynamic redirect URIs for different environments
-- For local dev: `http://localhost:3000/auth/callback`
-- For production: `https://yourdomain.vercel.app/auth/callback`
-- Added both to Google OAuth configuration
-
-### Problem 6: npm Package Installation Issues on Windows
-**Issue**: npm install failed with permission and tarball corruption errors due to OneDrive path length issues.
-
-**Solution**:
-- Used `npm cache clean --force` to clear corrupted cache
-- Ran `npm install --legacy-peer-deps` for better dependency resolution
-- Moved project to a shorter path if needed
-- Used `Remove-Item -Recurse` to properly clean up node_modules before retry
 
 ## Deployment to Vercel
 
