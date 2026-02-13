@@ -144,7 +144,18 @@ export default function BookmarksPage() {
         return;
       }
 
-      console.log('✅ Delete sent to database - real-time subscription will update UI');
+      console.log('✅ Bookmark deleted successfully');
+      
+      // Fallback: manually update state if real-time doesn't fire within 1 second
+      setTimeout(() => {
+        setBookmarks((prev) => {
+          const updated = prev.filter((b) => b.id !== id);
+          if (updated.length < prev.length) {
+            console.log('✅ Fallback: Manually removed bookmark from state');
+          }
+          return updated;
+        });
+      }, 1000);
     } catch (err) {
       console.error('❌ Unexpected error during delete:', err);
       alert('Unexpected error deleting bookmark');
