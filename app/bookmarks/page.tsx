@@ -127,23 +127,29 @@ export default function BookmarksPage() {
     }
 
     const supabase = createClient();
-    console.log('Attempting to delete bookmark:', id);
+    console.log('🗑️ Attempting to delete bookmark:', id, 'for user:', user.id);
     
-    const { error } = await supabase
-      .from('bookmarks')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', user.id);
+    try {
+      const { data, error, status } = await supabase
+        .from('bookmarks')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user.id)
+        .select();
 
-    console.log('Delete response:', { error });
+      console.log('🗑️ Delete response:', { status, error, data });
 
-    if (error) {
-      console.error('Error deleting bookmark:', error);
-      alert(`Failed to delete bookmark: ${error.message}`);
-      return;
+      if (error) {
+        console.error('❌ Error deleting bookmark:', error);
+        alert(`Failed to delete bookmark: ${error.message}`);
+        return;
+      }
+
+      console.log('✅ Bookmark marked for deletion - waiting for real-time sync...');
+    } catch (err) {
+      console.error('❌ Unexpected error during delete:', err);
+      alert('Unexpected error deleting bookmark');
     }
-
-    console.log('Bookmark deleted successfully, real-time subscription will update the state');
   };
 
   if (loading) {
