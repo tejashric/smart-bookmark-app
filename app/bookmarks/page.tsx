@@ -43,14 +43,19 @@ export default function BookmarksPage() {
 
   const handleRealtimeUpdate = (payload: any) => {
     // Supabase real-time payload type is complex and dynamic, 'any' is acceptable here
+    console.log('Real-time update received:', payload);
+    
     if (payload.eventType === 'INSERT' && payload.new) {
       const newBookmark = payload.new as Bookmark;
+      console.log('Adding bookmark:', newBookmark);
       setBookmarks((prev) => [newBookmark, ...prev]);
     } else if (payload.eventType === 'DELETE' && payload.old) {
       const oldBookmark = payload.old as Bookmark;
+      console.log('Deleting bookmark:', oldBookmark.id);
       setBookmarks((prev) => prev.filter((b) => b.id !== oldBookmark.id));
     } else if (payload.eventType === 'UPDATE' && payload.new) {
       const updatedBookmark = payload.new as Bookmark;
+      console.log('Updating bookmark:', updatedBookmark);
       setBookmarks((prev) =>
         prev.map((b) => (b.id === updatedBookmark.id ? updatedBookmark : b))
       );
@@ -88,10 +93,13 @@ export default function BookmarksPage() {
             filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
+            console.log('Subscription event received:', payload);
             handleRealtimeUpdate(payload);
           }
         )
-        .subscribe();
+        .subscribe((status) => {
+          console.log('Subscription status:', status);
+        });
 
       channelRef.current = channel;
       setLoading(false);
